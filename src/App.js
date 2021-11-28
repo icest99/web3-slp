@@ -460,7 +460,7 @@ function App() {
                 <p>Claim Able SLP: {claimAbleSLP}</p>
                 <p>Dept SLP: {deptSLP} </p>
                 {scholarUintInput}
-                <button className="bn5" onClick={scholarInfo}>Claim</button>
+                <button className="bn5" onClick={scholarInfo}>Check Info</button>
             </Container>
           </div>
           </Route>
