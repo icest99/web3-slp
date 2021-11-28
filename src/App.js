@@ -65,79 +65,60 @@ function App() {
     }
   }
 
-    //Run once, to get current wallet address/guildMaster
-    useEffect(() => {
-        getAccounts();
-        callGuildMaster();
-        callBalance();
-        // callClaimableTotal();
-        }, [])
+    //load smart contract, display 'Ready!' when successfully loaded.
+    async function load() {
+        await loadWeb3();
+        window.contract = await loadContract();
 
-    const getAxieAPI = () => {
-        Axios.get("https://game-api.axie.technology/api/v1/ronin:" + roninAddress).then(
-            (response) => {
-                setAxieName(response.data.name);
-                setaxieSLP(response.data.total_slp);
-            }
-        )
     }
 
-    // setLifeTimeSLP(res.lifeTimeSLP);
-    // setClaimAbleSLP((res.lifeTimeSLP) - (res.deptSLP))
-
-    async function scholarInfo() {
-          await  window.contract.methods.scholarInfo(scholarUint).call().then(
-            (res) => {
-              setLifeTimeSLP(res.lifetimeSLP);
-              setDeptSLP(res.deptSLP);
-            }
-          )
-              .catch(err => console.log(err))
-          
-          
-          setClaimAbleSLP(fromExponential(parseInt(lifeTimeSLP, 10) - parseInt(deptSLP, 10)))
-    }
+    load();
 
     useEffect(() => {
-        getAxieAPI();
-    }, [])
+      getAccounts();
+      callGuildMaster();
+      callBalance();
+      playerInfo();
+      }, [currentAccount])
+
+    function getAccounts() {
+      window.web3.eth.getAccounts((error,result) => {
+        result = String(result);
+          if (error) {
+              console.log(error);
+          } else {
+              setCurrentAccount(result)
+          }
+      });
+    }
+
+    console.log(currentAccount)
 
   async function loadContract() {
       return await new window.web3.eth.Contract(
           abi
-          , '0x62d7be6e401E1397ef2b608240637F95dAF50Df7');
+          , '0x85CbD680Cc1b3a899cf25A7c43395762b4F916eE');
   }
 
 
-  //Function Call
-  // async function callScholar() {
+  async function scholarInfo() {
+      await  window.contract.methods.scholarInfo(scholarUint).call()
+      .then((res) => {
+          setLifeTimeSLP(res.lifetimeSLP);
+          setDeptSLP(res.deptSLP);
+        })
+      .catch(err => console.log(err));
 
-  //       await  window.contract.methods.scholarLength().call()
-  //           .then(res => console.log('number of scholar:', res))
-  //           .catch(err => console.log(err))
+      setClaimAbleSLP(fromExponential(parseInt(lifeTimeSLP, 10) - parseInt(deptSLP, 10)))
+  }
 
-  // }
-
-  // async function callPlayerList() {
-
-  //       await  window.contract.methods.playerList(playerAddress).call()
-  //           .then(res => console.log('PlayerList:', res))
-  //           .catch(err => console.log(err))
-
-  // }  
-
-  // async function callRoninInfo() {
-  //       await  window.contract.methods.roninInfo(roninAddress).call()
-  //           .then(res => console.log('roninInfo:', res))
-  //           .catch(err => console.log(err))
-  // }
-
-  // async function callScholarInfo() {
-  //       await  window.contract.methods.scholarInfo(roninAddress).call()
-  //           .then(res => console.log('Scholar Info:', res))
-  //           .catch(err => console.log(err))
-  // }  
-
+  async function playerInfo() {
+      await  window.contract.methods.playerInfo(currentAccount).call()
+          .then(res => setScholarUint(res))
+          .catch(err => console.log(err))
+      // console.log(scholarUint, "test")
+  }
+  
   
   //Function Send
 
@@ -174,23 +155,6 @@ function App() {
       await  window.contract.methods.updatePercentShare(roninAddress, percentShare).send({from: currentAccount})
   }
 
-
-  //get wallet account index[0]
-  async function getCurrentAccount() {
-      const accounts = await window.web3.eth.getAccounts();
-      return accounts[0];
-  }
-
-  //load smart contract, display 'Ready!' when successfully loaded.
-  async function load() {
-      await loadWeb3();
-      window.contract = await loadContract();
-
-  }
-
-
-  load();
-
   async function callBalance() {
 
         await  window.contract.methods.balance().call()
@@ -199,31 +163,12 @@ function App() {
 
   }
 
-//   async function callClaimableTotal() {
-
-//         await  window.contract.methods.claimableTotal().call()
-//             .then(res => setTotalClaimAble(res))
-//             .catch(err => console.log(err))
-
-//   }
-
     async function callGuildMaster() {
     await  window.contract.methods.guildMaster().call()
         .then(res => setGuildMasterAddress(res))
         .catch(err => console.log(err))
 
     }
-
-  function getAccounts() {
-    window.web3.eth.getAccounts((error,result) => {
-      result = String(result);
-        if (error) {
-            console.log(error);
-        } else {
-            setCurrentAccount(result)
-        }
-    });
-  }
 
 
   const roninAddressInnput = <label>
@@ -244,14 +189,14 @@ function App() {
         />
         </label>
 
-  const scholarUintInput = <label>
-            <input 
-                type="text" 
-                placeholder= "Scholar index"
-                onChange={(e) => setScholarUint(e.target.value)} 
-                value={scholarUint}
-            />
-            </label>
+  // const scholarUintInput = <label>
+  //           <input 
+  //               type="text" 
+  //               placeholder= "Scholar index"
+  //               onChange={(e) => setScholarUint(e.target.value)} 
+  //               value={scholarUint}
+  //           />
+  //           </label>
 
   const  percentShareInput = <label>
             <input 
@@ -459,8 +404,8 @@ function App() {
                 <p>Life Time SLP: {lifeTimeSLP}</p>
                 <p>Claim Able SLP: {claimAbleSLP}</p>
                 <p>Dept SLP: {deptSLP} </p>
-                {scholarUintInput}
-                <button className="bn5" style={{marginRight: '10px'}} onClick={scholarInfo}>Check Info</button>
+
+                <button className="bn5" style={{marginRight: '10px'}} onClick={scholarInfo}>Refresh Info</button>
                 <button className="bn5" onClick={claim}>Claim</button>
             </Container>
           </div>
