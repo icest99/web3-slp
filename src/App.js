@@ -25,6 +25,7 @@ import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import PercentIcon from '@mui/icons-material/Percent';
 import PaymentsIcon from '@mui/icons-material/Payments';
 import TransitEnterexitIcon from '@mui/icons-material/TransitEnterexit';
+import fromExponential from 'from-exponential';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -44,12 +45,14 @@ function App() {
   const [percentShare, setPercentShare] = useState('')
   const [currentAccount, setCurrentAccount] = useState('')
   const [weiAmount, setWeiAmount] = useState('')
+  // const [displayAmount, setDisplayAmount] = useState('')
   const [scholarUint, setScholarUint] = useState('')
   const [guildMasterAddress, setGuildMasterAddress] = useState('')
   const [balance, setBalance] = useState('')
 //   const [totalClaimAble, setTotalClaimAble] = useState('')
   const [axieName, setAxieName] = useState('')
   const [axieSLP, setaxieSLP] = useState('')
+
 
 
   async function loadWeb3() {
@@ -85,36 +88,36 @@ function App() {
           abi
           , '0x62d7be6e401E1397ef2b608240637F95dAF50Df7');
   }
-  
+
 
   //Function Call
-  async function callScholar() {
+  // async function callScholar() {
 
-        await  window.contract.methods.scholarLength().call()
-            .then(res => console.log('number of scholar:', res))
-            .catch(err => console.log(err))
+  //       await  window.contract.methods.scholarLength().call()
+  //           .then(res => console.log('number of scholar:', res))
+  //           .catch(err => console.log(err))
 
-  }
+  // }
 
-  async function callPlayerList() {
+  // async function callPlayerList() {
 
-        await  window.contract.methods.playerList(playerAddress).call()
-            .then(res => console.log('PlayerList:', res))
-            .catch(err => console.log(err))
+  //       await  window.contract.methods.playerList(playerAddress).call()
+  //           .then(res => console.log('PlayerList:', res))
+  //           .catch(err => console.log(err))
 
-  }  
+  // }  
 
-  async function callRoninInfo() {
-        await  window.contract.methods.roninInfo(roninAddress).call()
-            .then(res => console.log('roninInfo:', res))
-            .catch(err => console.log(err))
-  }
+  // async function callRoninInfo() {
+  //       await  window.contract.methods.roninInfo(roninAddress).call()
+  //           .then(res => console.log('roninInfo:', res))
+  //           .catch(err => console.log(err))
+  // }
 
-  async function callScholarInfo() {
-        await  window.contract.methods.scholarInfo(roninAddress).call()
-            .then(res => console.log('Scholar Info:', res))
-            .catch(err => console.log(err))
-  }  
+  // async function callScholarInfo() {
+  //       await  window.contract.methods.scholarInfo(roninAddress).call()
+  //           .then(res => console.log('Scholar Info:', res))
+  //           .catch(err => console.log(err))
+  // }  
 
   
   //Function Send
@@ -134,14 +137,18 @@ function App() {
   }
 
   async function deposit() {
-     
+    // setWeiAmount(displayAmount/(10**18))
       await  window.contract.methods.deposit(weiAmount).send({from: currentAccount})
   }
 
   async function withdraw() {
-   
+    // setWeiAmount(weiAmount/(10**18))
     await  window.contract.methods.withdraw(weiAmount).send({from: currentAccount})
-}
+  }
+
+  async function claim() {
+    await  window.contract.methods.claim().send({from: currentAccount})
+  }
 
   async function updatePercentShare() {
       // updateStatus('Updating Percent Share...');
@@ -187,6 +194,8 @@ function App() {
         .catch(err => console.log(err))
 
     }
+
+    console.log(guildMasterAddress, "HEYYY")
 
   function getAccounts() {
     window.web3.eth.getAccounts((error,result) => {
@@ -239,8 +248,8 @@ function App() {
   const weiAmountInput = <label>
         <input 
         type="text" 
-        placeholder= "Wei Amount Deposit"
-        onChange={(e) => setWeiAmount(e.target.value)} 
+        placeholder= "SLP amount"
+        onChange={(e) => setWeiAmount((e.target.value))}
         value={weiAmount}
         />
         <br/>
@@ -249,13 +258,11 @@ function App() {
     const weiAmountInputW = <label>
     <input 
     type="text"
-    placeholder= "Wei Amount Withdraw"
-    onChange={(e) => setWeiAmount(e.target.value)} 
+    placeholder= "SLP amount"
+    onChange={(e) => setWeiAmount((e.target.value))}
     value={weiAmount}
     />
     </label>
-
-    console.log(roninAddress)
 
 
   return (
@@ -334,6 +341,15 @@ function App() {
               </ListItem>
             </Link>}
 
+            <Link to="/claim" className={classes.link}>
+              <ListItem button>
+                <ListItemIcon>
+                  <InfoIcon />
+                </ListItemIcon>
+                <ListItemText primary={"Claim"} />
+              </ListItem>
+            </Link>
+
           </List>
         </Drawer>
         <Switch>
@@ -379,23 +395,31 @@ function App() {
           </Route>
           <Route exact path="/change-share-percent">
             {(currentAccount === guildMasterAddress) && <Container>
+                {roninAddressInnput} <br/>
                 {percentShareInput} <br/>
                 <button className="bn5" onClick={updatePercentShare}>Update Percent Share</button>
             </Container>}
           </Route>
+
           <Route exact path="/deposit">
-            {(currentAccount === guildMasterAddress) &&<Container>
+          {(currentAccount === guildMasterAddress) && <Container>
                 {weiAmountInput}
                 <button className="bn5" onClick={deposit}>Deposit</button>
+                {/* <button className="bn5" onClick={console.log(weiAmount/(10**18))}>set amount</button> */}
                 
-            </Container>}
+            </Container> }
           </Route>
           <Route exact path="/withdraw">
             {(currentAccount === guildMasterAddress) &&<Container>
                 {weiAmountInputW}
                 <button className="bn5" onClick={withdraw}>withdraw</button>
-                
             </Container>}
+          </Route>
+
+          <Route exact path="/claim">
+            <Container>
+                <button className="bn5" onClick={claim}>Claim</button>
+            </Container>
           </Route>
         </div>
         </Switch>
