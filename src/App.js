@@ -47,7 +47,7 @@ function App() {
   const [scholarUint, setScholarUint] = useState('')
   const [guildMasterAddress, setGuildMasterAddress] = useState('')
   const [balance, setBalance] = useState('')
-  const [totalClaimAble, setTotalClaimAble] = useState('')
+//   const [totalClaimAble, setTotalClaimAble] = useState('')
   const [axieName, setAxieName] = useState('')
   const [axieSLP, setaxieSLP] = useState('')
 
@@ -64,7 +64,7 @@ function App() {
         getAccounts();
         callGuildMaster();
         callBalance();
-        callClaimableTotal();
+        // callClaimableTotal();
         }, [])
 
     const getAxieAPI = () => {
@@ -83,7 +83,7 @@ function App() {
   async function loadContract() {
       return await new window.web3.eth.Contract(
           abi
-          , '0x2a86Cedf01e10AF7E0EBA20029D12EC3D4cfb8ff');
+          , '0x62d7be6e401E1397ef2b608240637F95dAF50Df7');
   }
   
 
@@ -173,13 +173,13 @@ function App() {
 
   }
 
-  async function callClaimableTotal() {
+//   async function callClaimableTotal() {
 
-        await  window.contract.methods.claimableTotal().call()
-            .then(res => setTotalClaimAble(res))
-            .catch(err => console.log(err))
+//         await  window.contract.methods.claimableTotal().call()
+//             .then(res => setTotalClaimAble(res))
+//             .catch(err => console.log(err))
 
-  }
+//   }
 
     async function callGuildMaster() {
     await  window.contract.methods.guildMaster().call()
@@ -201,45 +201,45 @@ function App() {
 
 
   const roninAddressInnput = <label>
-        <span>Ronin Address:</span>
         <input 
             type="text" 
+            placeholder= "Ronin Address"
             onChange={(e) => setRoninAddress(e.target.value)}
             value={roninAddress}
         />
         </label>
 
   const playerAddressInput = <label>
-    <span>Player Address:</span>
         <input 
             type="text" 
+            placeholder= "Player Address"
             onChange={(e) => setPlayerAddress(e.target.value)} 
             value={playerAddress}
         />
         </label>
 
   const scholarUintInput = <label>
-            <span>ScholarUint:</span>
             <input 
                 type="text" 
+                placeholder= "Scholar index"
                 onChange={(e) => setScholarUint(e.target.value)} 
                 value={scholarUint}
             />
             </label>
 
   const  percentShareInput = <label>
-            <span>Percent Share:</span>
             <input 
                 type="text" 
+                placeholder= "Percent Share"
                 onChange={(e) => setPercentShare(e.target.value)} 
                 value={percentShare}
             />
             </label>
 
   const weiAmountInput = <label>
-        <span>Deposit:</span>
         <input 
         type="text" 
+        placeholder= "Wei Amount Deposit"
         onChange={(e) => setWeiAmount(e.target.value)} 
         value={weiAmount}
         />
@@ -247,9 +247,9 @@ function App() {
         </label>
 
     const weiAmountInputW = <label>
-    <span>Withdraw:</span>
     <input 
-    type="text" 
+    type="text"
+    placeholder= "Wei Amount Withdraw"
     onChange={(e) => setWeiAmount(e.target.value)} 
     value={weiAmount}
     />
@@ -339,7 +339,7 @@ function App() {
         <Switch>
         <div className="interfaceUI">
           <Route exact path="/">
-            <Container>
+            <Container className="Home-css">
             {(roninAddress !== '') &&
             <React.Fragment>
                 In-game Name: {axieName} <br/> 
@@ -351,15 +351,17 @@ function App() {
             </React.Fragment>}
 
                 Pool Balance: {balance} <br/>
-                Claimable Amount: {totalClaimAble}
+                {/* Claimable Amount: {totalClaimAble} */}
             </Container>
           </Route>
           <Route exact path="/add-scholar">
             {(currentAccount === guildMasterAddress) &&<Container>
-                {roninAddressInnput} <br/>
-                {playerAddressInput} <br/>
-                {percentShareInput} <br/>
-                <button className="bn5" onClick={addScholar}>Add Scholar</button>
+                <div className="card">
+                    {roninAddressInnput} <br/>
+                    {playerAddressInput} <br/>
+                    {percentShareInput} <br/>
+                    <button className="bn5" onClick={addScholar}>Add Scholar</button>
+                </div>
             </Container>}
           </Route>
           <Route exact path="/change-player">
@@ -390,7 +392,7 @@ function App() {
           </Route>
           <Route exact path="/withdraw">
             {(currentAccount === guildMasterAddress) &&<Container>
-                {weiAmountInput}
+                {weiAmountInputW}
                 <button className="bn5" onClick={withdraw}>withdraw</button>
                 
             </Container>}

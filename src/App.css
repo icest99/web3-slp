@@ -1,5 +1,12 @@
 .App {
   text-align: center;
+  color: white;
+}
+
+.Home-css {
+  font-weight: bold;
+  color: #000;
+
 }
 
 .interfaceUI {
@@ -16,7 +23,7 @@
   padding: 0.6em 2em;
   border: none;
   outline: none;
-  color: rgb(255, 255, 255);
+  color: #000;
   background: #111;
   cursor: pointer;
   position: relative;
@@ -82,8 +89,80 @@
   position: absolute;
   width: 100%;
   height: 100%;
-  background: #191919;
+  background: #ebecf0;
   left: 0;
   top: 0;
   border-radius: 10px;
 }
+
+/* // =================== */
+/* // =================== */
+/* // =================== */
+
+body, html {
+  background-color: #ebecf0;
+}
+body, p, input, select, textarea, button {
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: -0.2px;
+  font-size: 16px;
+}
+div, p {
+  color: #babecc;
+  text-shadow: 1px 1px 1px #fff;
+}
+form {
+  padding: 16px;
+  width: 320px;
+  margin: 0 auto;
+}
+.segment {
+  padding: 32px 0;
+  text-align: center;
+}
+input, button {
+  border: 0;
+  outline: 0;
+  font-size: 16px;
+  border-radius: 320px;
+  padding: 16px;
+  background-color: #ebecf0;
+  text-shadow: 1px 1px 0 #fff;
+}
+
+label {
+  display: block;
+  margin-bottom: 24px;
+  width: 100%;
+}
+input {
+  margin-right: 8px;
+  box-shadow: inset 2px 2px 5px #babecc, inset -5px -5px 10px #fff;
+  width: 100%;
+  box-sizing: border-box;
+  transition: all 0.2s ease-in-out;
+  appearance: none;
+  -webkit-appearance: none;
+}
+input:focus {
+  box-shadow: inset 1px 1px 2px #babecc, inset -1px -1px 2px #fff;
+}
+
+button {
+  color: #61677c;
+  font-weight: bold;
+  box-shadow: -5px -5px 20px #fff, 5px 5px 20px #babecc;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  font-weight: 600;
+}
+button:hover {
+  box-shadow: -2px -2px 5px #fff, 2px 2px 5px #babecc;
+}
+button:active {
+  box-shadow: inset 1px 1px 2px #babecc, inset -1px -1px 2px #fff;
+}
+
+
+
+
