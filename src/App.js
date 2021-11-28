@@ -358,14 +358,14 @@ function App() {
               </ListItem>
             </Link>}
 
-            <Link to="/claim" className={classes.link}>
+            {/* <Link to="/claim" className={classes.link}>
               <ListItem button>
                 <ListItemIcon>
                   <InfoIcon />
                 </ListItemIcon>
                 <ListItemText primary={"Claim"} />
               </ListItem>
-            </Link>
+            </Link> */}
 
             <Link to="/scholar-info" className={classes.link}>
               <ListItem button>
@@ -445,13 +445,13 @@ function App() {
             </Container></div>}
           </Route>
 
-          <Route exact path="/claim">
+          {/* <Route exact path="/claim">
           <div className="interfaceUI">
             <Container>
                 <button className="bn5" onClick={claim}>Claim</button>
             </Container>
           </div>
-          </Route>
+          </Route> */}
 
           <Route exact path="/scholar-info">
           <div className="interfaceUI">
@@ -460,7 +460,8 @@ function App() {
                 <p>Claim Able SLP: {claimAbleSLP}</p>
                 <p>Dept SLP: {deptSLP} </p>
                 {scholarUintInput}
-                <button className="bn5" onClick={scholarInfo}>Check Info</button>
+                <button className="bn5" style={{marginRight: '10px'}} onClick={scholarInfo}>Check Info</button>
+                <button className="bn5" onClick={claim}>Claim</button>
             </Container>
           </div>
           </Route>
