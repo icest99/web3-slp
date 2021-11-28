@@ -25,6 +25,7 @@ import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import PercentIcon from '@mui/icons-material/Percent';
 import PaymentsIcon from '@mui/icons-material/Payments';
 import TransitEnterexitIcon from '@mui/icons-material/TransitEnterexit';
+import PersonIcon from '@mui/icons-material/Person';
 import fromExponential from 'from-exponential';
 
 
@@ -49,7 +50,9 @@ function App() {
   const [scholarUint, setScholarUint] = useState('')
   const [guildMasterAddress, setGuildMasterAddress] = useState('')
   const [balance, setBalance] = useState('')
-//   const [totalClaimAble, setTotalClaimAble] = useState('')
+  const [claimAbleSLP, setClaimAbleSLP] = useState('')
+  const [deptSLP, setDeptSLP] = useState('')
+  const [lifeTimeSLP, setLifeTimeSLP] = useState('')
   const [axieName, setAxieName] = useState('')
   const [axieSLP, setaxieSLP] = useState('')
 
@@ -77,6 +80,22 @@ function App() {
                 setaxieSLP(response.data.total_slp);
             }
         )
+    }
+
+    // setLifeTimeSLP(res.lifeTimeSLP);
+    // setClaimAbleSLP((res.lifeTimeSLP) - (res.deptSLP))
+
+    async function scholarInfo() {
+          await  window.contract.methods.scholarInfo(scholarUint).call().then(
+            (res) => {
+              setLifeTimeSLP(res.lifetimeSLP);
+              setDeptSLP(res.deptSLP);
+            }
+          )
+              .catch(err => console.log(err))
+          
+          
+          setClaimAbleSLP(fromExponential(parseInt(lifeTimeSLP, 10) - parseInt(deptSLP, 10)))
     }
 
     useEffect(() => {
@@ -137,12 +156,12 @@ function App() {
   }
 
   async function deposit() {
-    // setWeiAmount(displayAmount/(10**18))
+
       await  window.contract.methods.deposit(weiAmount).send({from: currentAccount})
   }
 
   async function withdraw() {
-    // setWeiAmount(weiAmount/(10**18))
+
     await  window.contract.methods.withdraw(weiAmount).send({from: currentAccount})
   }
 
@@ -194,8 +213,6 @@ function App() {
         .catch(err => console.log(err))
 
     }
-
-    console.log(guildMasterAddress, "HEYYY")
 
   function getAccounts() {
     window.web3.eth.getAccounts((error,result) => {
@@ -350,11 +367,20 @@ function App() {
               </ListItem>
             </Link>
 
+            <Link to="/scholar-info" className={classes.link}>
+              <ListItem button>
+                <ListItemIcon>
+                  <PersonIcon />
+                </ListItemIcon>
+                <ListItemText primary={"Scholar Info"} />
+              </ListItem>
+            </Link>
+
           </List>
         </Drawer>
         <Switch>
-        <div className="interfaceUI">
           <Route exact path="/">
+          <div className="interfaceUI">
             <Container className="Home-css">
             {(roninAddress !== '') &&
             <React.Fragment>
@@ -369,59 +395,75 @@ function App() {
                 Pool Balance: {balance} <br/>
                 {/* Claimable Amount: {totalClaimAble} */}
             </Container>
+            </div>
           </Route>
           <Route exact path="/add-scholar">
-            {(currentAccount === guildMasterAddress) &&<Container>
+            {(currentAccount === guildMasterAddress) && <div className="interfaceUI"><Container>
                 <div className="card">
                     {roninAddressInnput} <br/>
                     {playerAddressInput} <br/>
                     {percentShareInput} <br/>
                     <button className="bn5" onClick={addScholar}>Add Scholar</button>
                 </div>
-            </Container>}
+            </Container></div>}
           </Route>
           <Route exact path="/change-player">
-          {(currentAccount === guildMasterAddress) && <Container>
+          {(currentAccount === guildMasterAddress) && <div className="interfaceUI"><Container>
                 {roninAddressInnput} <br/>
                 {playerAddressInput} <br/>
                 <button className="bn5" onClick={changePlayer}>Change Player</button>
-            </Container>}
+            </Container></div>}
           </Route>
           <Route exact path="/remove-player">
-            {(currentAccount === guildMasterAddress) && <Container>
+            {(currentAccount === guildMasterAddress) && <div className="interfaceUI"><Container>
                 {playerAddressInput} <br/>
                 <button className="bn5" onClick={removeOldPlayer}>Remove Old Player</button>
-            </Container>}
+            </Container></div>}
           </Route>
           <Route exact path="/change-share-percent">
-            {(currentAccount === guildMasterAddress) && <Container>
+            {(currentAccount === guildMasterAddress) && <div className="interfaceUI"><Container>
                 {roninAddressInnput} <br/>
                 {percentShareInput} <br/>
                 <button className="bn5" onClick={updatePercentShare}>Update Percent Share</button>
-            </Container>}
+            </Container></div>}
           </Route>
 
           <Route exact path="/deposit">
-          {(currentAccount === guildMasterAddress) && <Container>
+          {(currentAccount === guildMasterAddress) && <div className="interfaceUI">
+          <Container>
                 {weiAmountInput}
                 <button className="bn5" onClick={deposit}>Deposit</button>
                 {/* <button className="bn5" onClick={console.log(weiAmount/(10**18))}>set amount</button> */}
                 
-            </Container> }
+            </Container></div> }
           </Route>
           <Route exact path="/withdraw">
-            {(currentAccount === guildMasterAddress) &&<Container>
+            {(currentAccount === guildMasterAddress) && <div className="interfaceUI">
+            <Container>
                 {weiAmountInputW}
                 <button className="bn5" onClick={withdraw}>withdraw</button>
-            </Container>}
+            </Container></div>}
           </Route>
 
           <Route exact path="/claim">
+          <div className="interfaceUI">
             <Container>
                 <button className="bn5" onClick={claim}>Claim</button>
             </Container>
+          </div>
           </Route>
-        </div>
+
+          <Route exact path="/scholar-info">
+          <div className="interfaceUI">
+            <Container className="Home-css">
+                <p>Life Time SLP: {lifeTimeSLP}</p>
+                <p>Claim Able SLP: {claimAbleSLP}</p>
+                <p>Dept SLP: {deptSLP} </p>
+                {scholarUintInput}
+                <button className="bn5" onClick={scholarInfo}>Claim</button>
+            </Container>
+          </div>
+          </Route>
         </Switch>
       </div>
     </Router>
