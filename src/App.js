@@ -78,7 +78,6 @@ function App() {
       getAccounts();
       callGuildMaster();
       callBalance();
-      playerInfo();
       }, [currentAccount])
 
     function getAccounts() {
@@ -113,7 +112,7 @@ function App() {
   }
 
   async function playerInfo() {
-      await  window.contract.methods.playerInfo(currentAccount).call()
+      await  window.contract.methods.playerInfo("0x75fa61C7F2D06ffCF2e8C77945D6687760fa399b").call()
           .then(res => setScholarUint(res))
           .catch(err => console.log(err))
       // console.log(scholarUint, "test")
@@ -188,15 +187,6 @@ function App() {
             value={playerAddress}
         />
         </label>
-
-  // const scholarUintInput = <label>
-  //           <input 
-  //               type="text" 
-  //               placeholder= "Scholar index"
-  //               onChange={(e) => setScholarUint(e.target.value)} 
-  //               value={scholarUint}
-  //           />
-  //           </label>
 
   const  percentShareInput = <label>
             <input 
@@ -303,15 +293,6 @@ function App() {
               </ListItem>
             </Link>}
 
-            {/* <Link to="/claim" className={classes.link}>
-              <ListItem button>
-                <ListItemIcon>
-                  <InfoIcon />
-                </ListItemIcon>
-                <ListItemText primary={"Claim"} />
-              </ListItem>
-            </Link> */}
-
             <Link to="/scholar-info" className={classes.link}>
               <ListItem button>
                 <ListItemIcon>
@@ -336,9 +317,7 @@ function App() {
                 <React.Fragment>
                 Total SLP: {axieSLP} <br/>
             </React.Fragment>}
-
                 Pool Balance: {balance} <br/>
-                {/* Claimable Amount: {totalClaimAble} */}
             </Container>
             </div>
           </Route>
@@ -378,7 +357,6 @@ function App() {
           <Container>
                 {weiAmountInput}
                 <button className="bn5" onClick={deposit}>Deposit</button>
-                {/* <button className="bn5" onClick={console.log(weiAmount/(10**18))}>set amount</button> */}
                 
             </Container></div> }
           </Route>
@@ -389,15 +367,6 @@ function App() {
                 <button className="bn5" onClick={withdraw}>withdraw</button>
             </Container></div>}
           </Route>
-
-          {/* <Route exact path="/claim">
-          <div className="interfaceUI">
-            <Container>
-                <button className="bn5" onClick={claim}>Claim</button>
-            </Container>
-          </div>
-          </Route> */}
-
           <Route exact path="/scholar-info">
           <div className="interfaceUI">
             <Container className="Home-css">
@@ -405,7 +374,7 @@ function App() {
                 <p>Claim Able SLP: {claimAbleSLP}</p>
                 <p>Dept SLP: {deptSLP} </p>
 
-                <button className="bn5" style={{marginRight: '10px'}} onClick={scholarInfo}>Refresh Info</button>
+                <button className="bn5" style={{marginRight: '10px'}} onClick={playerInfo}>Refresh Info</button>
                 <button className="bn5" onClick={claim}>Claim</button>
             </Container>
           </div>
